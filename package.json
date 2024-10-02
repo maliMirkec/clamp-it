@@ -2,6 +2,10 @@
   "name": "clamp-it-",
   "displayName": "Clamp it!",
   "description": "CSS clamp() function generator",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com:maliMirkec/clamp-it.git"
+  },
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.93.0"
