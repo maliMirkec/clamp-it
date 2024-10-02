@@ -1,5 +1,7 @@
 # Clamp It! VS Code Extension
 
+https://github.com/user-attachments/assets/138c9751-1c74-489c-8400-8a7be1c45a34
+
 **Clamp It!** is a Visual Studio Code extension that helps web developers easily generate CSS `clamp()` function for responsive font sizing. This extension allows you to specify a base font size, mobile font size, desktop font size, and viewport sizes, automatically calculating the appropriate `clamp()` function in rem units.
 
 ## Features
