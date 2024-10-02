@@ -2,6 +2,8 @@
   "name": "clamp-it-",
   "displayName": "Clamp it!",
   "description": "CSS clamp() function generator",
+  "author": "Silvestar Bistrović <me@silvestar.codes> (https://www.silvestar.codes/)",
+  "publisher": "starbist",
   "repository": {
     "type": "git",
     "url": "git+https://github.com:maliMirkec/clamp-it.git"
