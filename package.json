@@ -1,7 +1,7 @@
 {
   "name": "clamp-it-",
   "displayName": "Clamp it!",
-  "description": "CSS clamp() function generator.",
+  "description": "CSS clamp() function generator",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.93.0"
