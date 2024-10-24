@@ -75,7 +75,7 @@ export function generateClampFunction(
   viewportMin: number,
   viewportMax: number
 ): string {
-  // set Min and Max font size for clamp function
+  // set Min font size and Max font size for clamp function
   const minFontSize = Math.min(mobileFontSize, desktopFontSize);
   const maxFontSize = Math.max(mobileFontSize, desktopFontSize);
 
