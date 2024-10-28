@@ -62,7 +62,7 @@ export function generateClampFunction(baseFontSize: number, mobileFontSize: numb
   const vw = slope * 100;
 
   // Generate clamp string in rem
-  return `clamp(${mobileFontSizeRem}, calc(${formatRem(yAxisIntersection, baseFontSize)} + ${formatNumber(vw, 3)}vw), ${desktopFontSizeRem})`;
+  return `clamp(${mobileFontSizeRem}, calc(${formatRem(yAxisIntersection, baseFontSize)} + ${formatNumber(vw, 3)}vw), ${desktopFontSizeRem}); /* mobile: ${mobileFontSize}px, desktop: ${desktopFontSize}px */`;
 }
 
 export function deactivate() {}
