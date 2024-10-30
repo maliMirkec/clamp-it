@@ -9,7 +9,7 @@
     "type": "git",
     "url": "git+https://github.com:maliMirkec/clamp-it.git"
   },
-  "version": "0.0.5",
+  "version": "0.0.6",
   "engines": {
     "vscode": "^1.93.0"
   },
@@ -70,5 +70,7 @@
     "typescript": "^5.6.2",
     "webpack": "^5.95.0",
     "webpack-cli": "^5.1.4"
-  }
+  },
+  "license": "MIT",
+  "licenseFile": "LICENSE.md"
 }
