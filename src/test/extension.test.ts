@@ -38,7 +38,7 @@ suite('Extension Test Suite', () => {
   describe('generateClampFunction', () => {
     it('should generate the correct clamp function string', () => {
       const result = generateClampFunction(16, 20, 16, 600, 1200);
-      assert.strictEqual(result, 'clamp(1rem, calc(0.821rem + 0.476vw), 1.25rem)'); // Check expected output
+      assert.strictEqual(result, 'clamp(1rem, calc(0.821rem + 0.476vw), 1.25rem); /* mobile: 16px, desktop: 20px */'); // Check expected output
     });
   });
 });
