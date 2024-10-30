@@ -39,10 +39,16 @@ export function activate(context: vscode.ExtensionContext) {
       // Generate the clamp function in rem using the effective base font size
       const clampFunction = generateClampFunction(baseFontSize, mobileFontSize, desktopFontSize, viewportMin, viewportMax);
 
-      // Replace the selected text with the clamp function
-      editor.edit(editBuilder => {
-        editBuilder.replace(selection, clampFunction);
-      });
+      // Check if NaN is part of the computed string
+      if(clampFunction.includes('NaN')) {
+        // Show error message
+        vscode.window.showErrorMessage('Please select valid font sizes and/or viewport values (comma-separated).')
+      } else {
+        // Replace the selected text with the clamp function
+        editor.edit(editBuilder => {
+          editBuilder.replace(selection, clampFunction);
+        });
+      }
     }
   });
 
