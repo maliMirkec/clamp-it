@@ -22,6 +22,11 @@
     "configuration": {
       "type": "object",
       "properties": {
+        "clampExtension.showComments": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show comments with min and max values in the generated clamp() function."
+        },
         "clampExtension.globalMinViewport": {
           "type": "number",
           "default": 600,

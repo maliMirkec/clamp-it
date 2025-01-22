@@ -67,8 +67,12 @@ export function generateClampFunction(baseFontSize: number, mobileFontSize: numb
   const yAxisIntersection = -viewportMin * slope + mobileFontSize;
   const vw = slope * 100;
 
+  const commentEnabled = vscode.workspace.getConfiguration().get<boolean>('clampExtension.showComments', false);
+
   // Generate clamp string in rem
-  return `clamp(${mobileFontSizeRem}, calc(${formatRem(yAxisIntersection, baseFontSize)} + ${formatNumber(vw, 3)}vw), ${desktopFontSizeRem}); /* mobile: ${mobileFontSize}px, desktop: ${desktopFontSize}px */`;
+  const clampFunction = `clamp(${mobileFontSizeRem}, calc(${formatRem(yAxisIntersection, baseFontSize)} + ${formatNumber(vw, 3)}vw), ${desktopFontSizeRem})`;
+
+  return commentEnabled ? `${clampFunction}; /* min: ${mobileFontSize}px, max: ${desktopFontSize}px */` : clampFunction;
 }
 
 export function deactivate() {}

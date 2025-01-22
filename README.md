@@ -12,6 +12,8 @@
 
 - **Easy Integration**: Quickly replace selected text in your code with the generated `clamp()` function.
 
+- **Comment Control**: Optionally include comments with the minimum and maximum values in the generated clamp() function. This feature can be enabled or disabled globally.
+
 ## Installation
 
 
@@ -32,10 +34,15 @@ Search for **"Clamp It!"** in the Extensions view (Ctrl + Shift + X or Cmd + Shi
 
     Example output:
 
-    ```
+    ```css
     clamp(1rem, calc(0.821rem + 0.476vw), 1.25rem)
     ```
 
+    If the setting is enabled, the output will also include a comment:
+
+    ```css
+    clamp(1rem, calc(0.821rem + 0.476vw), 1.25rem); /* min: 16px, max: 20px */
+    ```
 ## Settings
 
 ### Global Settings
@@ -46,6 +53,8 @@ Search for **"Clamp It!"** in the Extensions view (Ctrl + Shift + X or Cmd + Shi
 
 - `clampExtension.baseFontSize`: Set the global base font size (default: 16).
 
+- `clampExtension.showComments`: Show comments with min and max values in the generated clamp() function (default: false).
+
 ### Local Project Settings
 
 You can override the global settings for individual projects by adding them to your project's `.vscode/settings.json` file:
@@ -54,7 +63,8 @@ You can override the global settings for individual projects by adding them to y
 {
   "clampExtension.globalMinViewport": 500,
   "clampExtension.globalMaxViewport": 1500,
-  "clampExtension.baseFontSize": 14
+  "clampExtension.baseFontSize": 14,
+  "clampExtension.showComments": true
 }
 ```
 
