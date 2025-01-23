@@ -34,24 +34,24 @@ suite("Extension Test Suite", () => {
 
   describe("generateClampFunction", () => {
     it("should generate the correct clamp function string", () => {
-      const result = generateClampFunction(16, 20, 16, 600, 1200);
-      assert.strictEqual(
-        result,
-        "clamp(1rem, calc(1.5rem + -0.667vw), 1.25rem)"
-      ); // Check expected output
-    });
-    it("should generate the correct clamp function string", () => {
-      const result = generateClampFunction(16, 16, 20, 600, 1200);
+      const result = generateClampFunction(16, 20, 600, 1200, 16);
       assert.strictEqual(
         result,
         "clamp(1rem, calc(0.75rem + 0.667vw), 1.25rem)"
       ); // Check expected output
     });
-    it("should generate the correct clamp function string", () => {
-      const result = generateClampFunction(16, 32, 20, 375, 768);
+    it("should generate the correct clamp function string with equal font sizes", () => {
+      const result = generateClampFunction(16, 20, 600, 1200, 16);
       assert.strictEqual(
         result,
-        "clamp(1.25rem, calc(2.716rem + -3.053vw), 2rem)"
+        "clamp(1rem, calc(0.75rem + 0.667vw), 1.25rem)"
+      ); // Check expected output
+    });
+    it("should generate the correct clamp function string for smaller viewports", () => {
+      const result = generateClampFunction(16, 32, 375, 768, 16);
+      assert.strictEqual(
+        result,
+        "clamp(1rem, calc(0.046rem + 4.071vw), 2rem)"
       ); // Check expected output
     });
   });

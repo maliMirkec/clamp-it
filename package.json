@@ -1,7 +1,7 @@
 {
   "name": "clamp-it",
   "displayName": "Clamp it!",
-  "description": "CSS clamp() function generator",
+    "description": "CSS clamp() function generator. Generates clamp() functions with parameters in the following order: mobile font size, desktop font size, minimum viewport width, maximum viewport width, and base font size.",
   "icon": "gfx/clamp-it.png",
   "author": "Silvestar Bistrović <me@silvestar.codes> (https://www.silvestar.codes/)",
   "publisher": "starbist",
@@ -9,7 +9,7 @@
     "type": "git",
     "url": "git+https://github.com:maliMirkec/clamp-it.git"
   },
-  "version": "0.0.8",
+  "version": "0.0.9",
   "engines": {
     "vscode": "^1.93.0"
   },

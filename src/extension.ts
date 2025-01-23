@@ -25,9 +25,9 @@ export function activate(context: vscode.ExtensionContext) {
       const [
         mobileFontSize,
         desktopFontSize,
-        customBaseFontSize,
         customViewportMin,
         customViewportMax,
+        customBaseFontSize,
       ] = selectedText.split(",").map((val) => parseFloat(val.trim()));
 
       // Fetch global settings from the workspace configuration
