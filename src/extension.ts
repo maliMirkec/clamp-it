@@ -14,6 +14,20 @@ export function formatRem(px: number, base: number = 16): string {
 }
 
 export function activate(context: vscode.ExtensionContext) {
+  const hasShownWarningKey = "clampExtension.hasShownBaseFontSizeWarning";
+
+  // Check if the warning about the parameter update has been shown
+  const hasShownWarning = context.globalState.get<boolean>(hasShownWarningKey, false);
+
+  if (!hasShownWarning) {
+    vscode.window.showWarningMessage(
+      "The base font size is now the last parameter in the clamp function! Ensure your input matches the new parameter order: `mobileFontSize, desktopFontSize, viewportMin, viewportMax, baseFontSize`."
+    );
+
+    // Mark the warning as shown
+    context.globalState.update(hasShownWarningKey, true);
+  }
+
   let disposable = vscode.commands.registerCommand("extension.clampIt", () => {
     const editor = vscode.window.activeTextEditor;
 
@@ -93,8 +107,8 @@ export function generateClampFunction(
 
   // Calculate slope and intersection in rem
   const slope =
-    (desktopFontSize - mobileFontSize) / (viewportMax - viewportMin);
-  const yAxisIntersection = -viewportMin * slope + mobileFontSize;
+    (maxFontSize - minFontSize) / (viewportMax - viewportMin);
+  const yAxisIntersection = -viewportMin * slope + minFontSize;
   const vw = slope * 100;
 
   const commentEnabled = vscode.workspace.getConfiguration().get<boolean>('clampExtension.showComments', false);

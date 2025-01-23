@@ -1,9 +1,7 @@
 # Change Log
 
-All notable changes to the "clamp-it" extension will be documented in this file.
+## [0.0.9] - 2025-01-25
 
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
+### Changed
 
-## [Unreleased]
-
-- Initial release
+- **Parameter Order Update**: `baseFontSize` is now the last parameter in the function. Update your workflows accordingly.
