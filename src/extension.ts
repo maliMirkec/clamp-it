@@ -1,125 +1,51 @@
-import * as vscode from "vscode";
-
-export function formatNumber(value: number, decimalPlaces: number): string {
-  const factor = Math.pow(10, decimalPlaces);
-  const roundedValue = Math.round(value * factor) / factor; // Round to specified decimal places
-  return roundedValue.toString(); // Convert back to string
-}
-
-// Function to convert px to rem with proper formatting
-export function formatRem(px: number, base: number = 16): string {
-  const remValue = px / base; // Convert px to rem
-  // Use the formatNumber function to handle rounding
-  return formatNumber(remValue, 3) + "rem"; // Format to 3 decimal places
-}
+import * as vscode from 'vscode';
+import { generateClampFunction, parseInput } from './clamp';
 
 export function activate(context: vscode.ExtensionContext) {
-  const hasShownWarningKey = "clampExtension.hasShownBaseFontSizeWarning";
-
-  // Check if the warning about the parameter update has been shown
-  const hasShownWarning = context.globalState.get<boolean>(hasShownWarningKey, false);
-
-  if (!hasShownWarning) {
-    vscode.window.showWarningMessage(
-      "The base font size is now the last parameter in the clamp function! Ensure your input matches the new parameter order: `mobileFontSize, desktopFontSize, viewportMin, viewportMax, baseFontSize`."
-    );
-
-    // Mark the warning as shown
-    context.globalState.update(hasShownWarningKey, true);
-  }
-
-  let disposable = vscode.commands.registerCommand("extension.clampIt", () => {
-    const editor = vscode.window.activeTextEditor;
-
-    if (editor) {
-      const selection = editor.selection;
-      const selectedText = editor.document.getText(selection);
-
-      // Parse the selected text
-      const [
-        mobileFontSize,
-        desktopFontSize,
-        customViewportMin,
-        customViewportMax,
-        customBaseFontSize,
-      ] = selectedText.split(",").map((val) => parseFloat(val.trim()));
-
-      // Fetch global settings from the workspace configuration
-      const globalMinViewport = vscode.workspace
-        .getConfiguration()
-        .get("clampExtension.globalMinViewport", 600);
-      const globalMaxViewport = vscode.workspace
-        .getConfiguration()
-        .get("clampExtension.globalMaxViewport", 1200);
-      const globalBaseFontSize = vscode.workspace
-        .getConfiguration()
-        .get("clampExtension.baseFontSize", 16);
-
-      // Check if a custom base font is provided; if not, use the global base font size
-      const baseFontSize = customBaseFontSize || globalBaseFontSize;
-
-      // Use custom viewport sizes if provided, otherwise use global settings
-      const viewportMin = customViewportMin || globalMinViewport;
-      const viewportMax = customViewportMax || globalMaxViewport;
-
-      // Generate the clamp function in rem using the effective base font size
-      const clampFunction = generateClampFunction(
-        baseFontSize,
-        mobileFontSize,
-        desktopFontSize,
-        viewportMin,
-        viewportMax
-      );
-
-      // Check if NaN is part of the computed string
-      if (clampFunction.includes("NaN")) {
-        // Show error message
-        vscode.window.showErrorMessage(
-          "Please select valid font sizes and/or viewport values (comma-separated)."
-        );
-      } else {
-        // Replace the selected text with the clamp function
-        editor.edit((editBuilder) => {
-          editBuilder.replace(selection, clampFunction);
-        });
-      }
-    }
-  });
-
-  context.subscriptions.push(disposable);
+  context.subscriptions.push(
+    vscode.commands.registerCommand('extension.clampIt', clampIt),
+  );
 }
 
-// Function to generate the clamp() function in rem
-export function generateClampFunction(
-  baseFontSize: number,
-  mobileFontSize: number,
-  desktopFontSize: number,
-  viewportMin: number,
-  viewportMax: number
-): string {
-  // set Min font size and Max font size for clamp function
-  const minFontSize = Math.min(mobileFontSize, desktopFontSize);
-  const maxFontSize = Math.max(mobileFontSize, desktopFontSize);
+async function clampIt(): Promise<void> {
+  const editor = vscode.window.activeTextEditor;
+  if (!editor) {
+    return;
+  }
 
-  // Convert all values to rem using the specified base font size
-  const minFontSizeRem = formatRem(minFontSize, baseFontSize);
-  const maxFontSizeRem = formatRem(maxFontSize, baseFontSize);
+  const config = vscode.workspace.getConfiguration('clampExtension', editor.document.uri);
+  const defaults = {
+    viewportMin: config.get<number>('globalMinViewport', 600),
+    viewportMax: config.get<number>('globalMaxViewport', 1200),
+    baseFontSize: config.get<number>('baseFontSize', 16),
+  };
+  const showComments = config.get<boolean>('showComments', true);
 
-  // Calculate slope and intersection in rem
-  const slope =
-    (maxFontSize - minFontSize) / (viewportMax - viewportMin);
-  const yAxisIntersection = -viewportMin * slope + minFontSize;
-  const vw = slope * 100;
+  const edits: Array<{ range: vscode.Range; text: string }> = [];
+  const errors: string[] = [];
 
-  const commentEnabled = vscode.workspace.getConfiguration().get<boolean>('clampExtension.showComments', false);
+  for (const selection of editor.selections) {
+    const result = parseInput(editor.document.getText(selection), defaults);
+    if (typeof result === 'string') {
+      errors.push(result);
+    } else {
+      edits.push({ range: selection, text: generateClampFunction(result, showComments) });
+    }
+  }
 
-  // Generate clamp string in rem
-  const clampFunction = `clamp(${minFontSizeRem}, calc(${formatRem(
-    yAxisIntersection,
-    baseFontSize
-  )} + ${formatNumber(vw, 3)}vw), ${maxFontSizeRem})`;
+  if (edits.length > 0) {
+    await editor.edit((builder) => {
+      for (const edit of edits) {
+        builder.replace(edit.range, edit.text);
+      }
+    });
+  }
 
-  return commentEnabled ? `${clampFunction}; /* min: ${mobileFontSize}px, max: ${desktopFontSize}px */` : clampFunction;
+  if (errors.length > 0) {
+    vscode.window.showErrorMessage(
+      `Clamp it! ${errors[0]} Format: mobileFontSize, desktopFontSize, viewportMin, viewportMax, baseFontSize.`,
+    );
+  }
 }
 
 export function deactivate() {}

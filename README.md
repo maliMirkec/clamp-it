@@ -1,76 +1,65 @@
-# Clamp It! VS Code Extension
+# Clamp it!
 
 ![clamp-it](https://raw.githubusercontent.com/maliMirkec/clamp-it/main/gfx/clamp-it.gif)
 
-**Clamp It!** is a Visual Studio Code extension that helps web developers easily generate CSS `clamp()` functions for responsive font sizing. This extension allows you to specify font sizes, viewport widths, and a base font size, automatically calculating the appropriate `clamp()` function in rem units.
+Clamp it! is a VS Code extension that turns a few numbers into a fluid CSS `clamp()` value.
+
+I use fluid font sizes on every project. I got tired of calculating slopes and intercepts in an online tool, so I built this to do it right in the editor.
 
 ---
 
-> **Breaking update: as of version 0.0.9, the base font size is the last parameter!**
+> As of version 0.0.9, the base font size is the last parameter.
 
 ---
-
-## Features
-
-- **Responsive Font Sizes**: Generate `clamp()` functions based on specified font sizes, viewport widths, and base font sizes.
-
-- **Custom and Global Settings**: Set base font sizes and viewport limits either globally or per project.
-
-- **Flexible Input Order**: Accepts parameters in the following order: `mobileFontSize`, `desktopFontSize`, `viewportMin`, `viewportMax`, and `baseFontSize`.
-
-- **Easy Integration**: Quickly replace selected text in your code with the generated `clamp()` function.
-
-- **Comment Control**: Optionally include comments with the minimum and maximum values in the generated `clamp()` function. This feature can be enabled or disabled globally.
-
-## Installation
-
-Search for **"Clamp It!"** in the Extensions view (Ctrl + Shift + X or Cmd + Shift + X) and install it from the Marketplace.
 
 ## Usage
 
-1. **Select Text**: Highlight the text in the following format:
+1. Write the values in this order, then select them:
 
 ```css
 mobileFontSize, desktopFontSize, viewportMin, viewportMax, baseFontSize
 ```
 
-Example:
+For example:
 
 ```css
 16, 20, 600, 1200, 16
 ```
 
-2. **Command Palette**: Open the command palette (Ctrl + Shift + P or Cmd + Shift + P), and type **"Clamp it!"** to execute the command.
+2. Open the command palette (`Cmd+Shift+P` on Mac, `Ctrl+Shift+P` on Windows and Linux).
+3. Run `Clamp it!`.
 
-3. **Output**: The selected text will be replaced with a formatted `clamp()` function.
-
-Example output:
-
-```css
-clamp(1rem, calc(0.821rem + 0.476vw), 1.25rem)
-```
-
-If the setting is enabled, the output will also include a comment:
+The selection becomes this:
 
 ```css
-clamp(1rem, calc(0.821rem + 0.476vw), 1.25rem); /* min: 16px, max: 20px */
+clamp(1rem, calc(0.75rem + 0.667vw), 1.25rem) /* min: 16px, max: 20px */
 ```
+
+If you don't want the comment, turn off `clampExtension.showComments`:
+
+```css
+clamp(1rem, calc(0.75rem + 0.667vw), 1.25rem)
+```
+
+## Input
+
+- Only the first two values are required. The rest come from the settings.
+- Leave a value empty to use the setting. For example, `16, 20, , , 14` uses the default viewports and a 14px base font size.
+- Values can have a `px` unit, like `16px, 20px`.
+- If the mobile size is bigger than the desktop size, the value shrinks as the screen grows.
+- If both sizes are the same, you get a plain `rem` value. No need for `clamp()` there.
+- It works with many selections at once.
 
 ## Settings
 
-### Global Settings
+| Setting | Default | Description |
+| --- | --- | --- |
+| `clampExtension.globalMinViewport` | `600` | The minimum viewport width in pixels. |
+| `clampExtension.globalMaxViewport` | `1200` | The maximum viewport width in pixels. |
+| `clampExtension.baseFontSize` | `16` | The base font size for the `rem` conversion. |
+| `clampExtension.showComments` | `true` | Add a comment with the min and max sizes. |
 
-- `clampExtension.globalMinViewport`: Set the global minimum viewport size (default: 600).
-
-- `clampExtension.globalMaxViewport`: Set the global maximum viewport size (default: 1200).
-
-- `clampExtension.baseFontSize`: Set the global base font size (default: 16).
-
-- `clampExtension.showComments`: Show comments with min and max values in the generated clamp() function (default: false).
-
-### Local Project Settings
-
-You can override the global settings for individual projects by adding them to your project's `.vscode/settings.json` file:
+You can set them per project in `.vscode/settings.json`:
 
 ```json
 {
@@ -83,25 +72,28 @@ You can override the global settings for individual projects by adding them to y
 
 ## Development
 
-To contribute to the development of this extension:
+Here's how to run the extension locally:
 
-1. **Clone the repository**:
+1. Clone the repo:
 
 ```sh
-git clone https://github.com/yourusername/clamp-it.git
-
+git clone https://github.com/maliMirkec/clamp-it.git
 cd clamp-it
 ```
 
-2. **Install dependencies**:
+2. Install the dependencies:
 
 ```sh
 npm install
 ```
 
-3. **Run the extension**:
+3. Open the project in VS Code and press `F5`. VS Code opens a new window with the extension.
 
-Open the project in VS Code and press F5 to launch the extension in a new VS Code window.
+4. Run the tests:
+
+```sh
+npm run test:unit
+```
 
 ---
 
